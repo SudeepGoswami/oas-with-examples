@@ -138,29 +138,3 @@ paths:
                         inventor_name: "John Doe"
                       - application_number: "987654321"
                         inventor_name: "Jane Smith"
-        '400':
-          description: Bad request - the input query parameters are invalid
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-              examples:
-                default:
-                  value:
-                    error: "Invalid query parameters"
-        '404':
-          description: Dataset or version not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-              examples:
-                default:
-                  value:
-                    error: "Dataset or version not found"

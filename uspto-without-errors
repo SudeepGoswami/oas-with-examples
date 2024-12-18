@@ -3,7 +3,7 @@ info:
   version: '1.0.0'
   title: USPTO Data Set API
   description: >
-    The USPTO Data Set API is a resource for accessing large sets of USPTO data. 
+    The USPTO Data Set API is a resource for accessing large sets of USPTO data.
     It allows clients to request customized data in JSON format for retrieval.
 servers:
   - url: https://developer.uspto.gov/ds-api

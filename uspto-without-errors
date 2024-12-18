@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: USPTO Data Set API
+  description: >
+    The USPTO Data Set API is a resource for accessing large sets of USPTO data. 
+    It allows clients to request customized data in JSON format for retrieval.
+servers:
+  - url: https://developer.uspto.gov/ds-api
+paths:
+  /:
+    get:
+      summary: Get all available datasets
+      description: |
+        Returns an overview of all datasets that are currently available and the endpoints that can be used to retrieve their respective data.
+      responses:
+        '200':
+          description: A JSON array of available datasets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dataset:
+                      type: string
+                    endpoint:
+                      type: string
+              examples:
+                default:
+                  value:
+                    - dataset: "patents"
+                      endpoint: "/patents"
+                    - dataset: "trademarks"
+                      endpoint: "/trademarks"
+  '/{dataset}/{version}/fields':
+    get:
+      summary: Get fields for a dataset version
+      description: |
+        Returns metadata about fields that are available for the specified `dataset` and `version`.
+      parameters:
+        - name: dataset
+          in: path
+          required: true
+          description: A dataset identifier
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          description: The dataset version to query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON object with field metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+              examples:
+                default:
+                  value:
+                    fields:
+                      - name: "application_number"
+                        description: "The application number assigned by USPTO"
+                      - name: "inventor_name"
+                        description: "Name of the inventor"
+        '404':
+          description: Dataset or version not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Dataset or version not found"
+              examples:
+                default:
+                  value:
+                    error: "No such dataset/version combination exists."
+  '/{dataset}/{version}/records':
+    post:
+      summary: Retrieve records for a dataset version
+      description: |
+        Requests specific records from the dataset by query parameters or filters defined in the request body.
+      parameters:
+        - name: dataset
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The dataset identifier
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The dataset version
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: object
+                  description: Query parameters for selecting records
+      responses:
+        '200':
+          description: A JSON object containing the requested records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    type: array
+                    items:
+                      type: object
+              examples:
+                default:
+                  value:
+                    records:
+                      - application_number: "123456789"
+                        inventor_name: "John Doe"
+                      - application_number: "987654321"
+                        inventor_name: "Jane Smith"
+        '400':
+          description: Bad request - the input query parameters are invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid query parameters"
+        '404':
+          description: Dataset or version not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Dataset or version not found"

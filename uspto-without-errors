@@ -149,6 +149,10 @@ paths:
                   error:
                     type: string
                     example: "Invalid query parameters"
+              examples:
+                default:
+                  value:
+                    error: "Invalid query parameters"
         '404':
           description: Dataset or version not found
           content:
@@ -159,3 +163,7 @@ paths:
                   error:
                     type: string
                     example: "Dataset or version not found"
+              examples:
+                default:
+                  value:
+                    error: "Dataset or version not found"
